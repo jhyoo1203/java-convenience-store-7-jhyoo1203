@@ -34,7 +34,11 @@ public sealed class BaseProduct permits Product, PromotionProduct {
         return name;
     }
 
-    private int getStockQuantity() {
+    public int getPrice() {
+        return price;
+    }
+
+    public int getStockQuantity() {
         return stockQuantity;
     }
 }
