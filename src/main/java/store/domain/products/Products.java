@@ -4,6 +4,7 @@ import store.global.exception.ConvenienceStoreException;
 import store.global.exception.ErrorMessage;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Products {
@@ -13,6 +14,10 @@ public class Products {
     public static void purchase(String productName, int quantity) {
         BaseProduct product = findByName(productName);
         product.purchase(quantity);
+    }
+
+    public static List<BaseProduct> findAll() {
+        return Collections.unmodifiableList(products);
     }
 
     public static BaseProduct findByName(String name) {
