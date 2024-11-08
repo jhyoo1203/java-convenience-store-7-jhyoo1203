@@ -3,7 +3,7 @@ package store.domain.products;
 import store.global.exception.ConvenienceStoreException;
 import store.global.exception.ErrorMessage;
 
-public sealed abstract class ProductProperty permits Product, PromotionProduct, EventProduct {
+public sealed abstract class ProductProperty permits Product, PromotionProduct {
 
     protected final String name;
     protected final int price;
