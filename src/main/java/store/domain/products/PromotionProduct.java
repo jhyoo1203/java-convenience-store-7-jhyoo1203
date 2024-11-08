@@ -11,4 +11,8 @@ public final class PromotionProduct extends BaseProduct {
         super(name, price, stockQuantity);
         this.promotion = Promotions.findByName(promotionName);
     }
+
+    public String getPromotionName() {
+        return promotion.getName();
+    }
 }
