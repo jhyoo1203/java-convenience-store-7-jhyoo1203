@@ -1,21 +1,14 @@
 package store.domain.products;
 
-public final class PromotionProduct extends ProductProperty {
+import store.domain.events.Promotion;
+import store.domain.events.Promotions;
 
-    private final PromotionType promotionType;
+public final class PromotionProduct extends BaseProduct {
+
+    private final Promotion promotion;
 
     public PromotionProduct(String name, int price, int stockQuantity, String promotionName) {
         super(name, price, stockQuantity);
-        this.promotionType = PromotionType.from(promotionName);
-    }
-
-    @Override
-    public void purchase(int quantity) {
-        decreaseStock(quantity);
-    }
-
-    @Override
-    public boolean canPurchase(int quantity) {
-        return stockQuantity >= quantity;
+        this.promotion = Promotions.findByName(promotionName);
     }
 }
