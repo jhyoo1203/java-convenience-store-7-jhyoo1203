@@ -11,14 +11,31 @@ import java.util.List;
 public class Products {
 
     private static final List<BaseProduct> products = new ArrayList<>();
-    private static final int NO_GIFT = 0;
+    private static final int INT_ZERO = 0;
 
     public static int calculateTotalGiftCount(String productName, int quantity) {
         BaseProduct product = findByName(productName);
         if (product instanceof PromotionProduct promotionProduct) {
             return promotionProduct.calculateGiftCount(quantity);
         }
-        return NO_GIFT;
+        return INT_ZERO;
+    }
+
+    public static int getNonPromotionalCount(String productName, int quantity) {
+        BaseProduct product = findByName(productName);
+        if (product instanceof PromotionProduct promotionProduct) {
+            return calculateNonPromotionalQuantity(promotionProduct, quantity);
+        }
+        return INT_ZERO;
+    }
+
+    private static int calculateNonPromotionalQuantity(PromotionProduct product, int quantity) {
+        if (quantity > product.stockQuantity) {
+            int nonPromotionQuantity = product.getNonPromotionQuantity();
+            int normalProductQuantity = quantity - product.stockQuantity;
+            return nonPromotionQuantity + normalProductQuantity;
+        }
+        return INT_ZERO;
     }
 
     public static void purchaseProducts(String input) {
@@ -27,7 +44,7 @@ public class Products {
                 purchase(item.productName(), item.quantity()));
     }
 
-    private static void purchase(String productName, int quantity) {
+    public static void purchase(String productName, int quantity) {
         BaseProduct product = findByName(productName);
         if (product instanceof PromotionProduct) {
             purchasePromotionProductFirst((PromotionProduct) product, quantity);
