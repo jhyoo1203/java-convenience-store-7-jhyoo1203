@@ -14,15 +14,13 @@ public final class PromotionProduct extends BaseProduct {
         this.promotion = Promotions.findByName(promotionName);
     }
 
-    public String getPromotionName() {
-        return promotion.getName();
-    }
-
     public int calculateGiftCount(int quantity) {
         if (!canAddPromotionGift(quantity)) {
             return INT_ZERO;
         }
-        int numberOfSets = quantity / promotion.getBuyCount();
+
+        int availableQuantity = Math.min(quantity, stockQuantity);
+        int numberOfSets = availableQuantity / (promotion.getBuyCount() + 1);
         return numberOfSets * promotion.getGiftCount();
     }
 
@@ -36,7 +34,17 @@ public final class PromotionProduct extends BaseProduct {
     }
 
     public boolean canAddPromotionGift(int quantity) {
-        return quantity % promotion.getBuyCount() == INT_ZERO;
+        if (quantity >= stockQuantity) {
+            return false;
+        }
+        return quantity % (promotion.getBuyCount() + 1) == promotion.getBuyCount();
     }
 
+    public int getNonPromotionQuantity() {
+        return stockQuantity % (promotion.getBuyCount() + 1);
+    }
+
+    public String getPromotionName() {
+        return promotion.getName();
+    }
 }
