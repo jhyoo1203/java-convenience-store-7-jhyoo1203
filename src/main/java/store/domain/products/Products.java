@@ -1,30 +1,30 @@
 package store.domain.products;
 
+import store.domain.order.OrderRequest;
 import store.global.exception.ConvenienceStoreException;
 import store.global.exception.ErrorMessage;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class Products {
 
     private static final List<BaseProduct> products = new ArrayList<>();
-    private static final String ORDER_PRODUCT_REGEX = "[\\[\\]]";
-    private static final String BLANK = "";
-    private static final String PRODUCT_DELIMITER = ",";
-    private static final String EACH_PRODUCT_DELIMITER = "-";
-    private static final int PRODUCT_NAME_INDEX = 0;
-    private static final int QUANTITY_INDEX = 1;
+    private static final int NO_GIFT = 0;
+
+    public static int calculateTotalGiftCount(String productName, int quantity) {
+        BaseProduct product = findByName(productName);
+        if (product instanceof PromotionProduct promotionProduct) {
+            return promotionProduct.calculateGiftCount(quantity);
+        }
+        return NO_GIFT;
+    }
 
     public static void purchaseProducts(String input) {
-        Arrays.stream(input.replaceAll(ORDER_PRODUCT_REGEX, BLANK).split(PRODUCT_DELIMITER))
-                .map(str -> str.split(EACH_PRODUCT_DELIMITER))
-                .forEach(parts -> purchase(
-                        parts[PRODUCT_NAME_INDEX],
-                        Integer.parseInt(parts[QUANTITY_INDEX])
-                ));
+        OrderRequest orderRequest = OrderRequest.from(input);
+        orderRequest.getItems().forEach(item ->
+                purchase(item.productName(), item.quantity()));
     }
 
     private static void purchase(String productName, int quantity) {
