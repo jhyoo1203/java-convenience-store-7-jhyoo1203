@@ -37,10 +37,13 @@ public class Products {
     }
 
     private static void purchasePromotionProductFirst(PromotionProduct product, int quantity) {
-        int availableStock = product.stockQuantity;
-        product.purchase(availableStock);
-        findNormalProductByName(product.getName())
-                .purchase(quantity - availableStock);
+        int promotionPurchaseQuantity = Math.min(quantity, product.stockQuantity);
+        product.purchase(promotionPurchaseQuantity);
+
+        if (!product.isOutOfStock(quantity)) {
+            findNormalProductByName(product.getName())
+                    .purchase(quantity - promotionPurchaseQuantity);
+        }
     }
 
     public static List<BaseProduct> findAll() {
