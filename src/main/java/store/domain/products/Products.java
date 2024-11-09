@@ -40,7 +40,7 @@ public class Products {
         int promotionPurchaseQuantity = Math.min(quantity, product.stockQuantity);
         product.purchase(promotionPurchaseQuantity);
 
-        if (!product.isOutOfStock(quantity)) {
+        if (quantity > promotionPurchaseQuantity) {
             findNormalProductByName(product.getName())
                     .purchase(quantity - promotionPurchaseQuantity);
         }
