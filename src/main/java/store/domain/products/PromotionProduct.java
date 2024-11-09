@@ -5,8 +5,7 @@ import store.domain.events.Promotions;
 
 public final class PromotionProduct extends BaseProduct {
 
-    private static final int OUT_OF_STOCK_QUANTITY = 0;
-
+    private static final int INT_ZERO = 0;
 
     private final Promotion promotion;
 
@@ -19,12 +18,25 @@ public final class PromotionProduct extends BaseProduct {
         return promotion.getName();
     }
 
+    public int calculateGiftCount(int quantity) {
+        if (!canAddPromotionGift(quantity)) {
+            return INT_ZERO;
+        }
+        int numberOfSets = quantity / promotion.getBuyCount();
+        return numberOfSets * promotion.getGiftCount();
+    }
+
     @Override
     public void purchase(int quantity) {
         if (isOutOfStock(quantity)) {
-            stockQuantity = OUT_OF_STOCK_QUANTITY;
+            stockQuantity = INT_ZERO;
             return;
         }
         this.stockQuantity -= quantity;
     }
+
+    public boolean canAddPromotionGift(int quantity) {
+        return quantity % promotion.getBuyCount() == INT_ZERO;
+    }
+
 }
