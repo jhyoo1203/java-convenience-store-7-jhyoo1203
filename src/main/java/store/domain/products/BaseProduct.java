@@ -1,8 +1,5 @@
 package store.domain.products;
 
-import store.global.exception.ConvenienceStoreException;
-import store.global.exception.ErrorMessage;
-
 public sealed class BaseProduct permits Product, PromotionProduct {
 
     protected final String name;
@@ -20,14 +17,11 @@ public sealed class BaseProduct permits Product, PromotionProduct {
     }
 
     private void decreaseStock(int quantity) {
-        if (!canPurchase(quantity)) {
-            throw ConvenienceStoreException.from(ErrorMessage.OUT_OF_STOCK);
-        }
         this.stockQuantity -= quantity;
     }
 
-    private boolean canPurchase(int quantity) {
-        return stockQuantity >= quantity;
+    public boolean isOutOfStock(int quantity) {
+        return stockQuantity < quantity;
     }
 
     public String getName() {
