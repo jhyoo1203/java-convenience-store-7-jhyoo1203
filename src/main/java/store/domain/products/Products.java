@@ -22,7 +22,7 @@ public class Products {
 
     public static BaseProduct findByName(String name) {
         return products.stream()
-                .filter(p -> p.getName().equals(name))
+                .filter(product -> product.getName().equals(name))
                 .findFirst()
                 .orElseThrow(() -> ConvenienceStoreException.from(ErrorMessage.PRODUCT_NOT_FOUND));
     }
