@@ -1,7 +1,10 @@
 package store.domain.products;
 
+import camp.nextstep.edu.missionutils.DateTimes;
 import store.domain.events.Promotion;
 import store.domain.events.Promotions;
+
+import java.time.LocalDate;
 
 public final class PromotionProduct extends BaseProduct {
 
@@ -15,6 +18,9 @@ public final class PromotionProduct extends BaseProduct {
     }
 
     public int calculateGiftCount(int quantity) {
+        if (!promotion.isValidDate(LocalDate.from(DateTimes.now()))) {
+            return INT_ZERO;
+        }
         int availableQuantity = Math.min(quantity, stockQuantity);
         int numberOfSets = availableQuantity / (promotion.getBuyCount() + 1);
         return numberOfSets * promotion.getGiftCount();
