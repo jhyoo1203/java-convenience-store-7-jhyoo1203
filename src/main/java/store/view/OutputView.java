@@ -5,19 +5,15 @@ import store.domain.products.Products;
 
 import java.util.List;
 
+import static store.view.constants.OutputMessage.*;
+
 public class OutputView {
 
-    private static final String RETENTION_STATUS_MESSAGE = "안녕하세요. W편의점입니다.\n현재 보유하고 있는 상품입니다.\n";
-    private static final String PROMOTION_PRODUCT_FORMAT = "- %s %,d원 %d개 %s%n";
-    private static final String IN_STOCK_PRODUCT_FORMAT = "- %s %,d원 %d개%n";
-    private static final String OUT_OF_STOCK_PRODUCT = "재고 없음";
+    private static final int OUT_OF_STOCK_QUANTITY = 0;
 
     public void displayProducts() {
         System.out.println(RETENTION_STATUS_MESSAGE);
         List<ProductDto> products = getProductDtos();
-        if (products.isEmpty()) {
-            displayOutOfStockProduct();
-        }
         products.forEach(OutputView::displayProduct);
     }
 
@@ -26,10 +22,6 @@ public class OutputView {
                 .stream()
                 .map(ProductDto::from)
                 .toList();
-    }
-
-    private void displayOutOfStockProduct() {
-        System.out.printf(OUT_OF_STOCK_PRODUCT);
     }
 
     private static void displayProduct(ProductDto product) {
@@ -44,7 +36,7 @@ public class OutputView {
         System.out.printf(PROMOTION_PRODUCT_FORMAT,
                 product.name(),
                 product.price(),
-                product.stockQuantity(),
+                getStockDisplay(product.stockQuantity()),
                 product.promotionName());
     }
 
@@ -52,6 +44,49 @@ public class OutputView {
         System.out.printf(IN_STOCK_PRODUCT_FORMAT,
                 product.name(),
                 product.price(),
-                product.stockQuantity());
+                getStockDisplay(product.stockQuantity()));
+    }
+
+    private static String getStockDisplay(int stockQuantity) {
+        if (stockQuantity == OUT_OF_STOCK_QUANTITY) {
+            return OUT_OF_STOCK_PRODUCT;
+        }
+        return stockQuantity + STOCK_QUANTITY_SUFFIX;
+    }
+
+    public void displayOrderDetailsPrefix() {
+        System.out.println(ORDER_DETAILS_PREFIX);
+    }
+
+    public void displayOrderDetails(String productName, int quantity, int total) {
+        System.out.printf(ORDER_DETAILS_FORMAT, productName, quantity, total);
+    }
+
+    public void displayGiftDetailsPrefix() {
+        System.out.println(GIFT_DETAILS_PREFIX);
+    }
+
+    public void displayGiftDetails(String productName, int quantity) {
+        System.out.printf(GIFT_DETAILS_FORMAT, productName, quantity);
+    }
+
+    public void displayPaymentDetailsPrefix() {
+        System.out.println(PAYMENT_DETAILS_PREFIX);
+    }
+
+    public void displayTotalAmount(int quantity, int total) {
+        System.out.printf(TOTAL_AMOUNT_FORMAT, quantity, total);
+    }
+
+    public void displayEventDiscount(int amount) {
+        System.out.printf(EVENT_DISCOUNT_FORMAT, amount);
+    }
+
+    public void displayMembershipDiscount(int amount) {
+        System.out.printf(MEMBERSHIP_DISCOUNT_FORMAT, amount);
+    }
+
+    public void displayMoneyToPay(int amount) {
+        System.out.printf(MONEY_TO_PAY_FORMAT, amount);
     }
 }
