@@ -17,13 +17,13 @@ public class InputValidator {
 
     private static void validateEmpty(String input) {
         if (input == null || input.trim().isEmpty()) {
-            throw ConvenienceStoreException.from(ErrorMessage.INVALID_INPUT_ERROR);
+            throw ConvenienceStoreException.from(ErrorMessage.INVALID_INPUT_FORMAT);
         }
     }
 
     private static void validateProductFormat(String input) {
         if (!Pattern.matches(PRODUCT_FORMAT_REGEX, input)) {
-            throw ConvenienceStoreException.from(ErrorMessage.INVALID_INPUT_ERROR);
+            throw ConvenienceStoreException.from(ErrorMessage.INVALID_INPUT_FORMAT);
         }
     }
 
