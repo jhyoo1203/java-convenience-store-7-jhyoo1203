@@ -164,6 +164,7 @@ public class ConvenientStoreController {
         Products.purchaseProducts(orderQuery);
         GiftProducts.clear();
         boolean isContinue = retryOnException(inputView::readPurchaseContinue);
+        System.out.println();
         if (isContinue) {
             run();
         }
