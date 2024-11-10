@@ -59,11 +59,19 @@ public class Products {
 
     public static void purchase(String productName, int quantity) {
         BaseProduct product = findByName(productName);
-        if (product instanceof PromotionProduct) {
-            purchasePromotionProductFirst((PromotionProduct) product, quantity);
+        if (product instanceof PromotionProduct promotionProduct) {
+            purchaseAfterCheckStockQuantity(quantity, promotionProduct, product);
             return;
         }
         product.purchase(quantity);
+    }
+
+    private static void purchaseAfterCheckStockQuantity(int quantity, PromotionProduct promotionProduct, BaseProduct product) {
+        if (promotionProduct.stockQuantity + product.stockQuantity < quantity) {
+            System.out.println(ErrorMessage.OUT_OF_STOCK.getMessage());
+            return;
+        }
+        purchasePromotionProductFirst(promotionProduct, quantity);
     }
 
     private static void purchasePromotionProductFirst(PromotionProduct product, int quantity) {
