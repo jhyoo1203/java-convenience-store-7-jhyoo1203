@@ -1,5 +1,8 @@
 package store.domain.order;
 
+import store.global.exception.ConvenienceStoreException;
+import store.global.exception.ErrorMessage;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,6 +36,25 @@ public class OrderRequest {
                 parts[PRODUCT_NAME_INDEX],
                 Integer.parseInt(parts[QUANTITY_INDEX])
         );
+    }
+
+    public OrderItem findByName(String productName) {
+        return items.stream()
+                .filter(item -> item.getProductName().equals(productName))
+                .findFirst()
+                .orElseThrow(() -> ConvenienceStoreException.from(ErrorMessage.PRODUCT_NOT_FOUND));
+    }
+
+    public int calculateTotalQuantity() {
+        return items.stream()
+                .mapToInt(OrderItem::getQuantity)
+                .sum();
+    }
+
+    public int calculateTotalAmount() {
+        return items.stream()
+                .mapToInt(OrderItem::getTotal)
+                .sum();
     }
 
     public List<OrderItem> getItems() {
