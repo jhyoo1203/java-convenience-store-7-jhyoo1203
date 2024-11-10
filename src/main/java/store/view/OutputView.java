@@ -25,6 +25,22 @@ public class OutputView {
     }
 
     private static void displayProduct(ProductDto product) {
+        if (product.hasPromotion()) {
+            displayPromotionProduct(product);
+            return;
+        }
+        displayNormalProduct(product);
+    }
+
+    private static void displayPromotionProduct(ProductDto product) {
+        System.out.printf(PROMOTION_PRODUCT_FORMAT,
+                product.name(),
+                product.price(),
+                getStockDisplay(product.stockQuantity()),
+                product.promotionName());
+    }
+
+    private static void displayNormalProduct(ProductDto product) {
         System.out.printf(IN_STOCK_PRODUCT_FORMAT,
                 product.name(),
                 product.price(),

@@ -31,10 +31,10 @@ public class ConvenientStoreController {
 
     private void initialize() {
         dataInitializer.initialize();
-        outputView.displayProducts();
     }
 
     private void processOrder() {
+        outputView.displayProducts();
         String orderQuery = retryOnException(inputView::readPurchaseProduct);
         OrderRequest orderRequest = OrderRequest.from(orderQuery);
         processGiftItems(orderRequest);
@@ -166,7 +166,7 @@ public class ConvenientStoreController {
         boolean isContinue = retryOnException(inputView::readPurchaseContinue);
         System.out.println();
         if (isContinue) {
-            run();
+            processOrder();
         }
     }
 
