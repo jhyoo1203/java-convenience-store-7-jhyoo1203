@@ -1,5 +1,6 @@
 package store.domain.products;
 
+import store.domain.events.Promotion;
 import store.domain.order.OrderRequest;
 import store.global.exception.ConvenienceStoreException;
 import store.global.exception.ErrorMessage;
@@ -19,6 +20,18 @@ public class Products {
             return promotionProduct.calculateGiftCount(quantity);
         }
         return INT_ZERO;
+    }
+
+    public static boolean canAddPromotionGift(String productName, int quantity) {
+        BaseProduct product = findByName(productName);
+        if (!(product instanceof PromotionProduct promotionProduct)) {
+            return false;
+        }
+        if (quantity >= promotionProduct.stockQuantity) {
+            return false;
+        }
+        Promotion promotion = promotionProduct.getPromotion();
+        return quantity % (promotion.getBuyCount() + 1) == promotion.getBuyCount();
     }
 
     public static int getNonPromotionalCount(String productName, int quantity) {
@@ -41,7 +54,7 @@ public class Products {
     public static void purchaseProducts(String input) {
         OrderRequest orderRequest = OrderRequest.from(input);
         orderRequest.getItems().forEach(item ->
-                purchase(item.productName(), item.quantity()));
+                purchase(item.getProductName(), item.getQuantity()));
     }
 
     public static void purchase(String productName, int quantity) {
@@ -61,6 +74,16 @@ public class Products {
             findNormalProductByName(product.getName())
                     .purchase(quantity - promotionPurchaseQuantity);
         }
+    }
+
+    public static int calculateTotalGiftAmount(OrderRequest orderRequest) {
+        return orderRequest.getItems().stream()
+                .mapToInt(item -> {
+                    BaseProduct product = findByName(item.getProductName());
+                    int giftCount = calculateTotalGiftCount(item.getProductName(), item.getQuantity());
+                    return giftCount * product.getPrice();
+                })
+                .sum();
     }
 
     public static List<BaseProduct> findAll() {
