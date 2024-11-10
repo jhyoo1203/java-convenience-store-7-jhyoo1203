@@ -74,6 +74,21 @@ public class Products {
         purchasePromotionProductFirst(promotionProduct, quantity);
     }
 
+    public static boolean isOutOfStock(String productName, int quantity) {
+        BaseProduct product = findByName(productName);
+        if (product instanceof PromotionProduct promotionProduct) {
+            return checkStockQuantity(quantity, promotionProduct, product);
+        }
+        return false;
+    }
+
+    private static boolean checkStockQuantity(int quantity, PromotionProduct promotionProduct, BaseProduct product) {
+        if (promotionProduct.stockQuantity + product.stockQuantity < quantity) {
+            return true;
+        }
+        return false;
+    }
+
     private static void purchasePromotionProductFirst(PromotionProduct product, int quantity) {
         int promotionPurchaseQuantity = Math.min(quantity, product.stockQuantity);
         product.purchase(promotionPurchaseQuantity);
