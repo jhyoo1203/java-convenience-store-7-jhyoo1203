@@ -2,6 +2,8 @@ package store.domain.products;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 public class GiftProducts {
 
@@ -9,5 +11,9 @@ public class GiftProducts {
 
     public static void addGiftProducts(String productName, int quantity) {
         giftProducts.put(productName, quantity);
+    }
+
+    public static Set<Entry<String, Integer>> getGiftEntries() {
+        return giftProducts.entrySet();
     }
 }
