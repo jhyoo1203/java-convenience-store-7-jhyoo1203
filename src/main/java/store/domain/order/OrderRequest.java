@@ -1,5 +1,6 @@
 package store.domain.order;
 
+import store.domain.products.Products;
 import store.global.exception.ConvenienceStoreException;
 import store.global.exception.ErrorMessage;
 
@@ -32,10 +33,14 @@ public class OrderRequest {
 
     private static OrderItem parseOrderItem(String orderItemStr) {
         String[] parts = orderItemStr.split(EACH_PRODUCT_DELIMITER);
-        return new OrderItem(
+        OrderItem orderItem = new OrderItem(
                 parts[PRODUCT_NAME_INDEX],
                 Integer.parseInt(parts[QUANTITY_INDEX])
         );
+        if (Products.isOutOfStock(orderItem.getProductName(), orderItem.getQuantity())) {
+            throw ConvenienceStoreException.from(ErrorMessage.OUT_OF_STOCK);
+        }
+        return orderItem;
     }
 
     public OrderItem findByName(String productName) {
