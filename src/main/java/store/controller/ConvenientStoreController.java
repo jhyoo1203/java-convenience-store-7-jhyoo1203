@@ -61,13 +61,29 @@ public class ConvenientStoreController {
     }
 
     private void displayGiftsDetails() {
-        if (GiftProducts.getGiftEntries().isEmpty()) {
+        if (hasNoGifts()) {
             return;
         }
-        outputView.displayGiftDetailsPrefix();
-        for (Entry<String, Integer> gift : GiftProducts.getGiftEntries()) {
-            outputView.displayGiftDetails(gift.getKey(), gift.getValue());
+        if (hasNoValidGifts()) {
+            return;
         }
+        displayValidGifts();
+    }
+
+    private boolean hasNoGifts() {
+        return GiftProducts.getGiftEntries().isEmpty();
+    }
+
+    private boolean hasNoValidGifts() {
+        return GiftProducts.getGiftEntries().stream()
+                .noneMatch(gift -> gift.getValue() > 0);
+    }
+
+    private void displayValidGifts() {
+        outputView.displayGiftDetailsPrefix();
+        GiftProducts.getGiftEntries().stream()
+                .filter(gift -> gift.getValue() > 0)
+                .forEach(gift -> outputView.displayGiftDetails(gift.getKey(), gift.getValue()));
     }
 
     private void displayPaymentDetails(int totalQuantity, int totalAmount, int eventDiscountAmount, int membershipDiscountAmount) {
@@ -147,6 +163,7 @@ public class ConvenientStoreController {
 
     private void completeOrder(String orderQuery) {
         Products.purchaseProducts(orderQuery);
+        GiftProducts.clear();
         boolean isContinue = retryOnException(inputView::readPurchaseContinue);
         if (isContinue) {
             run();
