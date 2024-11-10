@@ -3,6 +3,7 @@ package store.view;
 import store.domain.dto.ProductDto;
 import store.domain.products.Products;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static store.view.constants.OutputMessage.*;
@@ -14,7 +15,7 @@ public class OutputView {
     public void displayProducts() {
         System.out.println(RETENTION_STATUS_MESSAGE);
         List<ProductDto> products = getProductDtos();
-        products.forEach(OutputView::displayProduct);
+        displayAllProducts(products);
     }
 
     private List<ProductDto> getProductDtos() {
@@ -22,6 +23,23 @@ public class OutputView {
                 .stream()
                 .map(ProductDto::from)
                 .toList();
+    }
+
+    private void displayAllProducts(List<ProductDto> products) {
+        List<ProductDto> displayProducts = new ArrayList<>(products);
+        products.stream()
+                .filter(ProductDto::needsOutOfStockVersion)
+                .forEach(product -> displayProducts.add(
+                        products.indexOf(product) + 1,
+                        new ProductDto(
+                                product.name(),
+                                product.price(),
+                                0,
+                                null,
+                                false
+                        )
+                ));
+        displayProducts.forEach(OutputView::displayProduct);
     }
 
     private static void displayProduct(ProductDto product) {
