@@ -37,19 +37,10 @@ public class ConvenientStoreController {
 
     private void processOrder() {
         String orderQuery = retryOnException(inputView::readPurchaseProduct);
-        OrderRequest orderRequest = createOrderRequest(orderQuery);
+        OrderRequest orderRequest = OrderRequest.from(orderQuery);
         processGiftItems(orderRequest);
         processOrderDetails(orderRequest);
         completeOrder(orderQuery);
-    }
-
-    private OrderRequest createOrderRequest(String orderQuery) {
-        try {
-            return OrderRequest.from(orderQuery);
-        } catch (ConvenienceStoreException e) {
-            System.out.println(e.getMessage());
-            return createOrderRequest(inputView.readPurchaseProduct());
-        }
     }
 
     private void processOrderDetails(OrderRequest orderRequest) {
