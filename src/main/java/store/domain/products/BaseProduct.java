@@ -24,6 +24,10 @@ public sealed class BaseProduct permits Product, PromotionProduct {
         return stockQuantity < quantity;
     }
 
+    public int calculateTotalAmount(int quantity) {
+        return price * quantity;
+    }
+
     public String getName() {
         return name;
     }
