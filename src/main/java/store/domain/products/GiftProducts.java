@@ -16,4 +16,8 @@ public class GiftProducts {
     public static Set<Entry<String, Integer>> getGiftEntries() {
         return giftProducts.entrySet();
     }
+
+    public static void clear() {
+        giftProducts.clear();
+    }
 }
